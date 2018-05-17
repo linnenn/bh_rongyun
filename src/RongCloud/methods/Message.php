@@ -1,5 +1,5 @@
 <?php
-namespace RongCloud;
+namespace Linnenn\RongCloud;
 use \Exception;
 
 class Message{
@@ -214,6 +214,66 @@ class Message{
     	}catch (Exception $e) {
     		print_r($e->getMessage());
     	}
+   }
+
+   /**
+     * 发送给指定用户的群组消息方法（以一个用户身份向群组内成员发送消息，单条消息最大 128k.每秒钟最多发送 20 条消息，每次最多向 3 个群组发送，如：一次向 3 个群组发送消息，示为 3 条消息。）
+     *
+     * @param  fromUserId:发送人用户 Id 。（必传）
+     * @param  toGroupId:接收群Id，提供多个本参数可以实现向多群发送消息，最多不超过 3 个群组。（必传）
+     * @param  toUserId:接收人用户 Id 。array()类型（必传）
+     * @param  txtMessage:发送消息内容（必传）
+     * @param  pushContent:定义显示的 Push 内容，如果 objectName 为融云内置消息类型时，则发送后用户一定会收到 Push 信息. 如果为自定义消息，则 pushContent 为自定义消息显示的 Push 内容，如果不传则用户不会收到 Push 通知。（可选）
+     * @param  pushData:针对 iOS 平台为 Push 通知时附加到 payload 中，Android 客户端收到推送消息时对应字段名为 pushData。（可选）
+     * @param  isPersisted:当前版本有新的自定义消息，而老版本没有该自定义消息时，老版本客户端收到消息后是否进行存储，0 表示为不存储、 1 表示为存储，默认为 1 存储消息。（可选）
+     * @param  isCounted:当前版本有新的自定义消息，而老版本没有该自定义消息时，老版本客户端收到消息后是否进行未读消息计数，0 表示为不计数、 1 表示为计数，默认为 1 计数，未读消息数增加 1。（可选）
+     * @param  isIncludeSender:发送用户自已是否接收消息，0 表示为不接收，1 表示为接收，默认为 0 不接收。（可选）
+     *
+     * @return $json
+     **/
+    public function publishGroupToUserId($fromUserId, $toGroupId, $toUserId, $objectName, $content, $pushContent = '', $pushData = '', $isPersisted, $isCounted, $isIncludeSender) {
+        try{
+            if (empty($fromUserId))
+                throw new Exception('Paramer "fromUserId" is required');
+
+            if (empty($toGroupId))
+                throw new Exception('Paramer "toGroupId" is required');
+
+            if (empty($toUserId))
+                throw new Exception('Paramer "toUserId" is required');
+
+            if (empty($objectName))
+                throw new Exception('Paramer "$objectName" is required');
+
+            if (empty($content))
+                throw new Exception('Paramer "$content" is required');
+
+            if (is_array($toUserId)) {
+                $params_strings = '&toUserId='.implode('&', $toUserId);
+            }else{
+                $params_strings = '&toUserId='.$toUserId;
+            }
+            $params = array (
+            'fromUserId' => $fromUserId,
+            'toGroupId' => $toGroupId,
+            'objectName' => $objectName,
+            'content' => $content,
+            'pushContent' => $pushContent,
+            'pushData' => $pushData,
+            'isPersisted' => $isPersisted,
+            'isCounted' => $isCounted,
+            'isIncludeSender' => $isIncludeSender,
+            'params=0' => $params_strings,
+            );
+
+            $ret = $this->SendRequest->curl('/message/group/publish.json',$params,'urlencoded','im','POST');
+            if(empty($ret))
+                throw new Exception('bad request');
+            return $ret;
+
+        }catch (Exception $e) {
+            print_r($e->getMessage());
+        }
    }
 
     /**
