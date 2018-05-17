@@ -1,5 +1,5 @@
 <?php
-namespace RongCloud;
+namespace Linnenn;
 use \Exception;
 
 class SendRequest

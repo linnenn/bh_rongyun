@@ -6,7 +6,7 @@
  *
  * v2.0.1
  */
-namespace RongCloud;
+namespace Linnenn;
 use \Exception;
 
 include 'SendRequest.php';

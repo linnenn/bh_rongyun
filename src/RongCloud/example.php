@@ -10,7 +10,7 @@ include 'RongCloud.php';
 $appKey = 'appKey';
 $appSecret = 'appSecret';
 $jsonPath = "jsonsource/";
-$rongCloud = new \RongCloud\RongCloud($appKey, $appSecret);
+$rongCloud = new \Linnenn\RongCloud($appKey, $appSecret);
 
 echo ("\n***************** user **************\n");
 // 获取 Token 方法

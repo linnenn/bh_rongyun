@@ -1,6 +1,6 @@
 <?php
 
-namespace RongCloud;
+namespace Linnenn\RongCloud;
 use \Exception;
 
 class Group{
